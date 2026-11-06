@@ -1,0 +1,23 @@
+# Fotos originais em alta resolução (dezenas de MB).
+# O site usa só as versões otimizadas em assets/img/web/.
+assets/img/*.jpg
+assets/img/*.jpeg
+assets/img/*.png
+assets/img/*.webp
+!assets/img/favicon.svg
+
+# Supabase CLI (arquivos locais)
+supabase/.temp/
+supabase/.branches/
+.env
+.env.*
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Arquivos temporários de pré-visualização
+_*.html
