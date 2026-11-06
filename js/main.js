@@ -104,16 +104,15 @@
 
   async function sendToSupabase(table, row) {
     const url = cfg.supabaseUrl.replace(/\/+$/, '') + '/rest/v1/' + encodeURIComponent(table);
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        apikey: cfg.supabaseAnonKey,
-        Authorization: 'Bearer ' + cfg.supabaseAnonKey,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal'
-      },
-      body: JSON.stringify(row)
-    });
+    const headers = {
+      apikey: cfg.supabaseAnonKey,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    };
+    // Chaves antigas (JWT "eyJ...") também vão no Authorization;
+    // as novas "sb_publishable_..." vão só no apikey.
+    if (/^eyJ/.test(cfg.supabaseAnonKey)) headers.Authorization = 'Bearer ' + cfg.supabaseAnonKey;
+    const response = await fetch(url, { method: 'POST', headers: headers, body: JSON.stringify(row) });
     if (!response.ok) throw new Error('Supabase ' + response.status);
   }
 

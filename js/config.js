@@ -14,6 +14,6 @@
    Com os campos vazios, os formulários apenas simulam o envio.
    ========================================================= */
 window.SITE_CONFIG = {
-  supabaseUrl: '',
-  supabaseAnonKey: ''
+  supabaseUrl: 'https://ozcunpolbrhsgixfcnjo.supabase.co',
+  supabaseAnonKey: 'sb_publishable_PprdUt9-NffAC34w5AvDJA_lC56Kosh'
 };
