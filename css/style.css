@@ -207,7 +207,7 @@ section { position: relative; }
 .site-header .nav-pill {
   pointer-events: auto;
   max-width: 1240px; margin-inline: auto;
-  padding: 10px 10px 10px 18px;
+  padding: 10px 10px 10px 34px;   /* marca alinhada ao respiro do texto do botão (10px + 24px) */
   border-radius: 999px;
   background: rgba(1, 21, 38, 0.38);
   border: 1px solid var(--glass-dark-border);
@@ -222,7 +222,7 @@ section { position: relative; }
 }
 .site-header .navbar { padding: 0; }
 @media (max-width: 991.98px) {
-  .site-header .nav-pill { border-radius: 26px; }
+  .site-header .nav-pill { border-radius: 26px; padding-left: 24px; }
 }
 
 .brand-name { font-weight: 800; font-size: 1rem; letter-spacing: 0.08em; color: var(--white); }
