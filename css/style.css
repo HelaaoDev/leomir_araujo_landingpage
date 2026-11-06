@@ -427,7 +427,8 @@ section { position: relative; }
   content: ""; position: absolute; width: 520px; height: 520px; right: -160px; top: 10%;
   background: radial-gradient(circle, rgba(7, 89, 140, 0.16), transparent 65%); filter: blur(40px); pointer-events: none;
 }
-.desafio-text { max-width: 480px; }
+/* largura limitada só quando o texto divide a linha com os cards (desktop) */
+@media (min-width: 1200px) { .desafio-text { max-width: 480px; } }
 .desafio-text .lead-text { margin-bottom: 1.5rem; }
 
 .bento { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
