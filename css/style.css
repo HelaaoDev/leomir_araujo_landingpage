@@ -687,6 +687,20 @@ section { position: relative; }
 .lp-back:hover { color: var(--white); }
 .lp-back:hover i { transform: translateX(-4px); }
 .lp-hero .section-title { font-size: clamp(2.25rem, 4.6vw, 3.5rem); }
+/* Acesso direto à ferramenta, abaixo dos itens */
+.lp-access { margin-top: 32px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.lp-access small { color: rgba(255, 255, 255, 0.6); font-size: 0.875rem; max-width: 440px; }
+.btn-glass-light {
+  color: var(--white); background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 12px 28px -14px rgba(0, 8, 16, 0.8);
+}
+.btn-glass-light:hover, .btn-glass-light:focus-visible {
+  color: var(--navy-900); background: var(--white); border-color: var(--white);
+}
+.btn-glass-light .bi-arrow-right { transition: transform 0.3s var(--ease); }
+.btn-glass-light:hover .bi-arrow-right { transform: translateX(4px); }
 .lp-lead { font-size: 1.1875rem; color: rgba(255, 255, 255, 0.74); max-width: 540px; }
 .page-dark .site-footer { border-top: 1px solid rgba(255, 255, 255, 0.06); }
 

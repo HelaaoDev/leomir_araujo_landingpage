@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checklist VAAR | Leomir Araujo</title>
+  <meta name="description" content="Checklist e calculadora indicativa das cinco condicionalidades do VAAR/Fundeb, com base na Resolução CIF nº 24/2026.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#011526">
+  <script>
+    /* Aplica o tema salvo antes de desenhar a página (evita "piscar") */
+    try { var t = localStorage.getItem('checklist-vaar-tema'); if (t) document.documentElement.setAttribute('data-bs-theme', t); } catch (e) {}
+  </script>
+
+  <!-- Fontes da marca -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 + ícones -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- Identidade do site (tokens, botões, menu, rodapé) + estilos do checklist -->
+  <link href="../css/style.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <a class="visually-hidden-focusable skip-link" href="#calc">Pular para a calculadora</a>
+
+  <!-- ===================== TOPO (menu em pílula, igual ao site) ===================== -->
+  <header class="site-header sticky-top" id="siteHeader">
+    <div class="nav-pill">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <a class="brand-name text-decoration-none" href="../index.html">LEOMIR ARAUJO</a>
+        <div class="d-flex flex-wrap align-items-center gap-2 nav-tools">
+          <label for="cycle" class="cycle-label">Ciclo</label>
+          <select id="cycle" class="form-select cycle-select" aria-describedby="cycleHint">
+            <option value="2026">2026/2027 · recebe em 2027</option>
+            <option value="2027">2027/2028 · recebe em 2028</option>
+            <option value="2028">2028/2029 · recebe em 2029</option>
+            <option value="2029">2029/2030 · recebe em 2030</option>
+          </select>
+          <button type="button" class="btn btn-icon btn-glass" id="btnTema" aria-label="Alternar tema claro/escuro">
+            <i class="bi bi-circle-half" aria-hidden="true"></i>
+          </button>
+          <a class="btn btn-coral d-none d-md-inline-flex" href="../index.html#contato">Solicitar proposta</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== HERO ===================== -->
+    <section class="vaar-hero">
+      <!-- Foto de fundo: troque os arquivos mantendo a versão de celular (-sm) -->
+      <picture class="vaar-cover" aria-hidden="true">
+        <source media="(max-width: 767.98px)" srcset="assets/img/web/hero-checklist-sm.jpg">
+        <img src="assets/img/web/hero-checklist.jpg" alt="" fetchpriority="high" decoding="async">
+      </picture>
+      <span class="vaar-shade" aria-hidden="true"></span>
+      <div class="hero-bg" aria-hidden="true">
+        <span class="blob b1"></span>
+        <span class="blob b2"></span>
+        <span class="blob b3"></span>
+        <span class="hero-grid"></span>
+        <span class="grain"></span>
+      </div>
+      <div class="container">
+        <div class="row g-4 align-items-end">
+          <div class="col-lg-7">
+            <a href="../index.html" class="lp-back"><i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar ao site</a>
+            <p class="eyebrow eyebrow-coral">Material gratuito</p>
+            <h1 class="vaar-title">Checklist&nbsp;VAAR <span class="text-grad">e calculadora de condicionalidades</span></h1>
+            <p class="vaar-lead">Responda o que a sua rede já tem e veja, condicionalidade por condicionalidade, onde está o risco de ficar fora da complementação VAAR do Fundeb.</p>
+            <p class="vaar-note" id="cycleHint"></p>
+            <ul class="legal list-unstyled">
+              <li>Lei nº 14.113/2020, art. 14, § 1º</li>
+              <li>Resolução CIF nº 24/2026</li>
+              <li>Resolução CIF nº 17/2025</li>
+            </ul>
+          </div>
+          <div class="col-lg-5">
+            <div class="verdict-card" aria-live="polite">
+              <span class="verdict-label">RESULTADO INDICATIVO</span>
+              <span class="verdict" id="verdict">—</span>
+              <div class="chips" id="chips"></div>
+              <div class="d-flex flex-wrap align-items-center gap-2 example-bar">
+                <span id="exampleNote" class="me-auto">Preenchido com um município de exemplo.</span>
+                <button class="btn btn-ghost" type="button" id="btnClear">Começar do zero</button>
+                <button class="btn btn-ghost" type="button" id="btnExample">Carregar exemplo</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CALCULADORA ===================== -->
+    <section class="calc-section">
+      <div class="container">
+        <div class="row g-4 align-items-start">
+          <div class="col-lg-7">
+            <form class="d-grid gap-3" id="calc" novalidate>
+
+              <!-- Condicionalidade I -->
+              <article class="cond" id="c1">
+                <div class="cond-head">
+                  <span class="cond-num" aria-hidden="true">I</span>
+                  <div>
+                    <h2>Gestão escolar</h2>
+                    <p>Provimento do diretor por critérios técnicos de mérito e desempenho, ou escolha com participação da comunidade entre aprovados em avaliação de mérito.</p>
+                    <span class="who">A REDE COMPROVA NO SIMEC</span>
+                  </div>
+                  <span class="status" data-status="1"></span>
+                </div>
+                <div class="cond-body">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="i_lei" class="form-label">Há lei ou norma própria de provimento?</label>
+                      <select id="i_lei" class="form-select">
+                        <option value="">Selecione</option>
+                        <option value="sim">Sim, publicada</option>
+                        <option value="nao">Não</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="i_forma" class="form-label">Forma de provimento prevista</label>
+                      <select id="i_forma" class="form-select">
+                        <option value="">Selecione</option>
+                        <option value="merito">Critérios técnicos de mérito e desempenho</option>
+                        <option value="comunidade">Escolha da comunidade entre aprovados em avaliação</option>
+                        <option value="outra">Outra forma (indicação, eleição sem avaliação)</option>
+                      </select>
+                    </div>
+                    <div class="col-12">
+                      <label for="i_edital" class="form-label">Edital do processo seletivo</label>
+                      <select id="i_edital" class="form-select">
+                        <option value="">Selecione</option>
+                        <option value="concluido">Publicado e concluído</option>
+                        <option value="andamento">Em andamento</option>
+                        <option value="nao">Não há edital</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="i_total" class="form-label">Gestores em atuação</label>
+                      <input id="i_total" type="number" min="0" step="1" inputmode="numeric" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="i_merito" class="form-label">Providos por mérito ou escolha da comunidade</label>
+                      <input id="i_merito" type="number" min="0" step="1" inputmode="numeric" class="form-control">
+                    </div>
+                    <div class="col-12">
+                      <div class="meter" aria-hidden="true"><div class="meter-fill" id="i_fill"></div><div class="meter-mark" id="i_mark"></div></div>
+                      <div class="meter-row"><span id="i_pct">0% providos por mérito</span><span id="i_req">mínimo: mais de 50%</span></div>
+                    </div>
+                  </div>
+                  <div class="msg" id="i_msg" hidden></div>
+                  <details class="docs">
+                    <summary>Documentos para o Simec <span class="docs-count" data-count="i"></span></summary>
+                    <ul data-group="i">
+                      <li><label><input type="checkbox" id="d_i1" class="form-check-input"><span>Norma de provimento em PDF<small>Tipo, número, data de publicação e artigos que tratam da forma de provimento.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_i2" class="form-check-input"><span>Edital do processo seletivo já concluído<small>Com as etapas: títulos, prova de conhecimento, entrevista, plano de gestão ou curso de formação.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_i3" class="form-check-input"><span>Relação dos diretores em atuação<small>Quantos efetivos, quantos providos por mérito, quantos escolhidos com a comunidade, formação.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_i4" class="form-check-input"><span>Conferência com o Censo Escolar<small>Total de diretores muito abaixo do Censo gera diligência.</small></span></label></li>
+                    </ul>
+                  </details>
+                </div>
+              </article>
+
+              <!-- Condicionalidade II -->
+              <article class="cond" id="c2">
+                <div class="cond-head">
+                  <span class="cond-num" aria-hidden="true">II</span>
+                  <div>
+                    <h2>Participação no Saeb</h2>
+                    <p>Pelo menos 80% dos estudantes de cada ano escolar avaliado precisam fazer as provas do Saeb.</p>
+                    <span class="who">APURADA PELO INEP</span>
+                  </div>
+                  <span class="status" data-status="2"></span>
+                </div>
+                <div class="cond-body">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="ii_5" class="form-label">Participação no 5º ano (%)</label>
+                      <input id="ii_5" type="number" min="0" max="100" step="0.1" inputmode="decimal" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="ii_9" class="form-label">Participação no 9º ano (%)</label>
+                      <input id="ii_9" type="number" min="0" max="100" step="0.1" inputmode="decimal" class="form-control">
+                    </div>
+                    <p class="hint col-12 mb-0">Deixe em branco o ano que a rede não oferta. Use os dados de comparecimento da última aplicação do Saeb.</p>
+                  </div>
+                  <div class="msg" id="ii_msg" hidden></div>
+                  <details class="docs">
+                    <summary>Como se preparar <span class="docs-count" data-count="ii"></span></summary>
+                    <ul data-group="ii">
+                      <li><label><input type="checkbox" id="d_ii1" class="form-check-input"><span>Turmas e matrículas corretas no Censo Escolar<small>A participação é calculada sobre os estudantes informados.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_ii2" class="form-check-input"><span>Calendário de mobilização nas escolas<small>Comunicação às famílias e controle de faltas nos dias de prova.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_ii3" class="form-check-input"><span>Responsável pelo acompanhamento da aplicação<small>Por escola, com lista de presença por turma.</small></span></label></li>
+                    </ul>
+                  </details>
+                </div>
+              </article>
+
+              <!-- Condicionalidade III -->
+              <article class="cond" id="c3">
+                <div class="cond-head">
+                  <span class="cond-num" aria-hidden="true">III</span>
+                  <div>
+                    <h2>Redução das desigualdades</h2>
+                    <p>Redução das desigualdades educacionais socioeconômicas e raciais medidas nos exames nacionais do Saeb.</p>
+                    <span class="who">APURADA PELO INEP</span>
+                  </div>
+                  <span class="status" data-status="3"></span>
+                </div>
+                <div class="cond-body">
+                  <div>
+                    <label for="iii_res" class="form-label">Resultado divulgado pelo Inep</label>
+                    <select id="iii_res" class="form-select">
+                      <option value="">Ainda não divulgado / não sei</option>
+                      <option value="sim">Atende</option>
+                      <option value="nao">Não atende</option>
+                    </select>
+                  </div>
+                  <fieldset class="simulacao">
+                    <legend>Simulação de tendência (opcional)</legend>
+                    <p class="hint">% de estudantes no nível adequado em cada grupo, na edição anterior e na atual do Saeb.</p>
+                    <div class="row g-3">
+                      <div class="col-md-6"><label for="iii_ppi_a" class="form-label">Pretos, pardos e indígenas · anterior</label><input id="iii_ppi_a" type="number" min="0" max="100" step="0.1" inputmode="decimal" class="form-control"></div>
+                      <div class="col-md-6"><label for="iii_ppi_b" class="form-label">Pretos, pardos e indígenas · atual</label><input id="iii_ppi_b" type="number" min="0" max="100" step="0.1" inputmode="decimal" class="form-control"></div>
+                      <div class="col-md-6"><label for="iii_nse_a" class="form-label">Nível socioeconômico baixo · anterior</label><input id="iii_nse_a" type="number" min="0" max="100" step="0.1" inputmode="decimal" class="form-control"></div>
+                      <div class="col-md-6"><label for="iii_nse_b" class="form-label">Nível socioeconômico baixo · atual</label><input id="iii_nse_b" type="number" min="0" max="100" step="0.1" inputmode="decimal" class="form-control"></div>
+                    </div>
+                  </fieldset>
+                  <div class="msg" id="iii_msg" hidden></div>
+                  <details class="docs">
+                    <summary>Como se preparar <span class="docs-count" data-count="iii"></span></summary>
+                    <ul data-group="iii">
+                      <li><label><input type="checkbox" id="d_iii1" class="form-check-input"><span>Leitura do resultado da rede no Saeb por grupo<small>Pretos, pardos e indígenas e nível socioeconômico baixo.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_iii2" class="form-check-input"><span>Plano de recomposição da aprendizagem focado nesses grupos<small>Com metas por escola e acompanhamento bimestral.</small></span></label></li>
+                    </ul>
+                  </details>
+                </div>
+              </article>
+
+              <!-- Condicionalidade IV -->
+              <article class="cond" id="c4">
+                <div class="cond-head">
+                  <span class="cond-num" aria-hidden="true">IV</span>
+                  <div>
+                    <h2>ICMS Educacional</h2>
+                    <p>Regime de colaboração entre estado e município formalizado em lei estadual e em execução. A habilitação do estado vale para os seus municípios.</p>
+                    <span class="who">O ESTADO COMPROVA NO SIMEC</span>
+                  </div>
+                  <span class="status" data-status="4"></span>
+                </div>
+                <div class="cond-body">
+                  <div>
+                    <label for="iv_estado" class="form-label">Situação do seu estado</label>
+                    <select id="iv_estado" class="form-select">
+                      <option value="">Não sei</option>
+                      <option value="sim">Estado habilitado</option>
+                      <option value="nao">Estado não habilitado</option>
+                    </select>
+                  </div>
+                  <div class="msg" id="iv_msg" hidden></div>
+                  <details class="docs">
+                    <summary>O que confirmar com a secretaria estadual <span class="docs-count" data-count="iv"></span></summary>
+                    <ul data-group="iv">
+                      <li><label><input type="checkbox" id="d_iv1" class="form-check-input"><span>Lei estadual do ICMS Educação aprovada<small>Número, data e artigos sobre a parcela vinculada a indicadores educacionais.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_iv2" class="form-check-input"><span>Pelo menos 10 pontos percentuais da cota municipal distribuídos por indicadores<small>De melhoria da aprendizagem e equidade, considerando o nível socioeconômico.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_iv3" class="form-check-input"><span>Registro do estado feito no Simec dentro do prazo</span></label></li>
+                    </ul>
+                  </details>
+                </div>
+              </article>
+
+              <!-- Condicionalidade V -->
+              <article class="cond" id="c5">
+                <div class="cond-head">
+                  <span class="cond-num" aria-hidden="true">V</span>
+                  <div>
+                    <h2>BNCC e Computação</h2>
+                    <p>Referencial curricular alinhado à BNCC e às normas de Computação na Educação Básica, aprovado pelo sistema de ensino.</p>
+                    <span class="who">A REDE COMPROVA NO SIMEC</span>
+                  </div>
+                  <span class="status" data-status="5"></span>
+                </div>
+                <div class="cond-body">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="v_bncc" class="form-label">Referencial alinhado à BNCC</label>
+                      <select id="v_bncc" class="form-select">
+                        <option value="">Selecione</option>
+                        <option value="habilitado">Já habilitado em ciclo anterior</option>
+                        <option value="sim">Aprovado, com ato</option>
+                        <option value="nao">Não aprovado</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="v_comp" class="form-label">Contempla Computação?</label>
+                      <select id="v_comp" class="form-select">
+                        <option value="">Selecione</option>
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="v_tipo" class="form-label">Referencial de Computação</label>
+                      <select id="v_tipo" class="form-select">
+                        <option value="">Selecione</option>
+                        <option value="adesao">Adesão ao referencial estadual</option>
+                        <option value="proprio">Próprio</option>
+                        <option value="misto">Misto, por etapa</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="v_data" class="form-label">Data do ato de aprovação</label>
+                      <input id="v_data" type="date" class="form-control">
+                    </div>
+                  </div>
+                  <div class="msg" id="v_msg" hidden></div>
+                  <details class="docs">
+                    <summary>Documentos para o Simec <span class="docs-count" data-count="v"></span></summary>
+                    <ul data-group="v">
+                      <li><label><input type="checkbox" id="d_v1" class="form-check-input"><span>Referencial curricular alinhado à BNCC em PDF<small>Dispensado de novo envio se a rede já foi habilitada antes.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_v2" class="form-check-input"><span>Referencial de Computação em PDF<small>Conforme Resoluções CNE/CEB nº 1/2022 e nº 2/2025.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_v3" class="form-check-input"><span>Ato de aprovação posterior a 04/10/2022<small>Resolução ou parecer do conselho do sistema de ensino.</small></span></label></li>
+                    </ul>
+                  </details>
+                </div>
+              </article>
+
+              <!-- Prazo e diligências -->
+              <article class="cond" id="c6">
+                <div class="cond-head">
+                  <span class="cond-num" aria-hidden="true"><i class="bi bi-clock-history"></i></span>
+                  <div>
+                    <h2>Prazo e diligências</h2>
+                    <p>Sem registro no prazo, ou sem resposta à diligência em até 15 dias, a rede é inabilitada mesmo cumprindo as condições.</p>
+                    <span class="who">VALE PARA I, IV E V</span>
+                  </div>
+                  <span class="status" data-status="6"></span>
+                </div>
+                <div class="cond-body">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="p_reg">
+                    <label class="form-check-label" for="p_reg">Informações registradas no módulo Fundeb – VAAR – Condicionalidades do Simec dentro do prazo</label>
+                  </div>
+                  <div>
+                    <label for="p_dil" class="form-label">Diligência da SEB/MEC</label>
+                    <select id="p_dil" class="form-select">
+                      <option value="nenhuma">Não houve diligência</option>
+                      <option value="respondida">Recebida e respondida em até 15 dias</option>
+                      <option value="aberta">Recebida, ainda sem resposta</option>
+                      <option value="perdida">Prazo de 15 dias vencido sem resposta</option>
+                    </select>
+                  </div>
+                  <div class="msg" id="p_msg" hidden></div>
+                  <details class="docs">
+                    <summary>Rotina de acompanhamento <span class="docs-count" data-count="p"></span></summary>
+                    <ul data-group="p">
+                      <li><label><input type="checkbox" id="d_p1" class="form-check-input"><span>Usuário com acesso ativo ao Simec<small>E um substituto, para férias ou troca de gestão.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_p2" class="form-check-input"><span>Consulta semanal da aba “situação” do módulo<small>A diligência chega pelo Simec e o prazo corre a partir do envio.</small></span></label></li>
+                      <li><label><input type="checkbox" id="d_p3" class="form-check-input"><span>CACS informado do envio e do resultado<small>Ministérios Públicos têm cobrado conselhos e secretarias sobre o VAAR.</small></span></label></li>
+                    </ul>
+                  </details>
+                </div>
+              </article>
+            </form>
+          </div>
+
+          <!-- Painel de resultado -->
+          <aside class="col-lg-5" aria-label="Resultado">
+            <div class="panel">
+              <section class="result">
+                <h2>SUA REDE AGORA</h2>
+                <div class="result-rows" id="rows"></div>
+                <div>
+                  <h3 class="actions-title">O que fazer primeiro</h3>
+                  <ol class="actions" id="actions"></ol>
+                  <p class="empty-actions" id="noActions" hidden>Nenhuma pendência encontrada. Guarde os comprovantes e acompanhe a aba “situação” no Simec.</p>
+                </div>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                  <button class="btn btn-coral" type="button" id="btnCopy"><i class="bi bi-clipboard me-2" aria-hidden="true"></i>Copiar resumo para a equipe</button>
+                  <button class="btn btn-ghost" type="button" id="btnPrint"><i class="bi bi-printer me-2" aria-hidden="true"></i>Imprimir</button>
+                  <span class="toast-msg" id="toast" role="status"></span>
+                </div>
+                <textarea id="copyFallback" class="form-control" aria-label="Resumo para copiar" readonly hidden></textarea>
+              </section>
+
+              <!-- CTA para o site do Leomir -->
+              <section class="cta-card">
+                <strong>Quer ajuda para resolver as pendências?</strong>
+                <p>Leomir Araujo acompanha secretarias em todo o ciclo do VAAR, do diagnóstico à resposta das diligências.</p>
+                <a class="btn btn-coral" href="https://helaaodev.github.io/leomir_araujo_landingpage/#contato">Solicitar proposta</a>
+              </section>
+
+              <p class="disclaimer">Resultado indicativo, feito a partir das respostas da própria rede. A habilitação oficial é definida pelo MEC e pelo Inep. As regras do ciclo 2026/2027 estão na Resolução CIF nº 24/2026; as dos ciclos seguintes serão publicadas pela CIF.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CALENDÁRIO ===================== -->
+    <section class="band" id="calendario">
+      <div class="container">
+        <p class="eyebrow">Calendário do ciclo 2026/2027</p>
+        <h2 class="band-title">O que já aconteceu e o que vem agora</h2>
+        <ol class="row g-3 list-unstyled timeline">
+          <li class="col-sm-6 col-lg-3"><div class="tl-item"><span class="when">29/12/2025</span><p>Resolução CIF nº 17/2025 define a metodologia das condicionalidades II e III e dos indicadores do VAAR.</p></div></li>
+          <li class="col-sm-6 col-lg-3"><div class="tl-item"><span class="when">17/06/2026</span><p>Resolução CIF nº 24/2026 publicada no DOU com as regras de I, IV e V.</p></div></li>
+          <li class="col-sm-6 col-lg-3"><div class="tl-item"><span class="when">31/08/2026</span><p>Fim do prazo para registrar as informações no Simec.</p><small>A CNM pediu prorrogação ao MEC.</small></div></li>
+          <li class="col-sm-6 col-lg-3"><div class="tl-item now"><span class="when">Agora</span><p>Diligências: 15 dias para responder. Sem novas diligências nos 75 dias antes do fim do exercício.</p><small>Próximo passo: preparar o ciclo 2027/2028, com mínimo de mais de 70% dos diretores providos por mérito.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== ERROS COMUNS ===================== -->
+    <section class="band" id="erros">
+      <div class="container">
+        <p class="eyebrow">Onde as redes mais erram</p>
+        <h2 class="band-title">Os motivos mais comuns de inabilitação</h2>
+        <div class="row g-3">
+          <div class="col-md-6 col-lg-4"><div class="err"><span class="big">73,2%</span><strong>das redes inabilitadas em 2025 caíram na condicionalidade III</strong><p>1.880 redes ficaram fora do VAAR pela desigualdade de aprendizagem, segundo o Todos Pela Educação.</p></div></div>
+          <div class="col-md-6 col-lg-4"><div class="err"><strong>Gestão escolar</strong><p>Forma de provimento “outra forma”, edital ainda não concluído, maioria dos diretores sem processo de mérito e total de diretores diferente do Censo Escolar.</p></div></div>
+          <div class="col-md-6 col-lg-4"><div class="err"><strong>Computação na BNCC</strong><p>Referencial sem Computação, ou ato de aprovação ausente ou anterior a 04/10/2022. Desde o ciclo 2026/2027 isso inabilita.</p></div></div>
+          <div class="col-md-6 col-lg-4"><div class="err"><strong>Diligência sem resposta</strong><p>São 15 dias contados do envio do comunicado. Sem resposta, a rede é inabilitada.</p></div></div>
+          <div class="col-md-6 col-lg-4"><div class="err"><strong>Prazo do Simec</strong><p>Informação registrada depois do prazo não conta, mesmo que a rede cumpra a condição.</p></div></div>
+          <div class="col-md-6 col-lg-4"><div class="err"><strong>Participação no Saeb</strong><p>Abaixo de 80% em qualquer ano avaliado. Turmas com muitas faltas no dia da prova derrubam a rede inteira.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FONTES ===================== -->
+    <section class="band" id="fontes">
+      <div class="container">
+        <p class="eyebrow">Fontes</p>
+        <h2 class="band-title">Base legal e referências</h2>
+        <ol class="sources">
+          <li><a href="https://www.gov.br/fnde/pt-br/acesso-a-informacao/acoes-e-programas/financiamento/fundeb/legislacao/2026/resolucao-cif-no-24-de-15-de-junho-de-2026" target="_blank" rel="noopener">Resolução CIF nº 24/2026 — condicionalidades I, IV e V, ciclo 2026/2027</a></li>
+          <li><a href="https://mpce.mp.br/institucional/centros-de-apoio-operacional/caoeduc/kits-de-atuacao/kit-fundeb-complementacao-vaar/fundeb-vaar-condicionalidades-inabilitacao/" target="_blank" rel="noopener">MPCE — condicionalidades I e III e Resolução CIF nº 17/2025</a></li>
+          <li><a href="https://mpce.mp.br/wp-content/uploads/2025/07/20250090-Infomativo-FUNDE-SOBRE-VAAR-CAOEDUC.pdf" target="_blank" rel="noopener">MPCE — informativo sobre o VAAR</a></li>
+          <li><a href="https://todospelaeducacao.org.br/wordpress/wp-content/uploads/2025/08/panorama-vaar-2025.pdf" target="_blank" rel="noopener">Todos Pela Educação — Panorama VAAR 2025</a></li>
+          <li><a href="https://cnm.org.br/storage/noticias/2026/Links/OF_952_2026_MEC_SEB_Prorroga%C3%A7%C3%A3o%20de%20prazo_SIMEC.pdf" target="_blank" rel="noopener">CNM — pedido de prorrogação do prazo do Simec</a></li>
+          <li><a href="https://tce.sp.gov.br/legislacao/comunicado/correcao-informacoes-vaar-fundeb" target="_blank" rel="noopener">TCE-SP — diligências no módulo VAAR</a></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== RODAPÉ (igual ao site) ===================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-5">
+        <div class="col-md-6 col-lg-4">
+          <span class="brand-name text-white">LEOMIR ARAUJO</span>
+          <p class="mt-2 mb-0">Especialista em Financiamento da Educação Básica Pública.</p>
+        </div>
+        <nav class="col-6 col-lg-4" aria-label="Rodapé — site">
+          <h2 class="footer-title">SITE</h2>
+          <ul class="list-unstyled footer-links">
+            <li><a href="../index.html#servicos">Serviços</a></li>
+            <li><a href="../index.html#palestras">Palestras</a></li>
+            <li><a href="../curriculo.html">Sobre</a></li>
+            <li><a href="../index.html#contato">Solicitar proposta</a></li>
+          </ul>
+        </nav>
+        <nav class="col-6 col-lg-4" aria-label="Rodapé — checklist">
+          <h2 class="footer-title">NESTA PÁGINA</h2>
+          <ul class="list-unstyled footer-links">
+            <li><a href="#calc">Calculadora</a></li>
+            <li><a href="#calendario">Calendário do ciclo</a></li>
+            <li><a href="#erros">Erros mais comuns</a></li>
+            <li><a href="#fontes">Fontes</a></li>
+          </ul>
+        </nav>
+      </div>
+      <span class="footer-wordmark" aria-hidden="true">LEOMIR ARAUJO</span>
+      <div class="footer-bottom">
+        <span>Resultado indicativo. A habilitação oficial é do MEC e do Inep.</span>
+        <span>Conteúdo de referência: 06/11/2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/regras.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

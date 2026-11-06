@@ -5,6 +5,9 @@ assets/img/*.jpeg
 assets/img/*.png
 assets/img/*.webp
 !assets/img/favicon.svg
+checklist-vaar/assets/img/*.jpg
+checklist-vaar/assets/img/*.jpeg
+checklist-vaar/assets/img/*.png
 
 # Supabase CLI (arquivos locais)
 supabase/.temp/
