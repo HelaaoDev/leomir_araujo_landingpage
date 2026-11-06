@@ -82,6 +82,12 @@ h1, h2, h3, h4, .brand-name, .btn, .eyebrow, .overline {
 }
 
 .container { max-width: 1240px; }
+/* Telas menores (tablet, iPad, celular): mais respiro lateral.
+   No desktop (≥ 1200px) nada muda. */
+@media (max-width: 1199.98px) {
+  .container { padding-inline: clamp(20px, 5vw, 48px); }
+  .site-header { padding-inline: clamp(12px, 3vw, 32px); }
+}
 section { position: relative; }
 
 /* ---------- Utilitários ---------- */

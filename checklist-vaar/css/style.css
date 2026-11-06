@@ -324,7 +324,7 @@ details.docs summary:hover { color: var(--accent-text); }
 .site-footer { margin-top: 0; }
 
 /* ---------- Responsivo ---------- */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
   .panel { position: static; }
 }
 @media (max-width: 575.98px) {
